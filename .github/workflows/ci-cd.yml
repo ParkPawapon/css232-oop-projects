@@ -1,0 +1,79 @@
+name: Chronos Enterprise CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  enterprise-quality-and-architecture-gate:
+    name: Enterprise Quality, ArchUnit & Coverage Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Enforce Branch Naming Policy (Forbid ai/ and codex/)
+        if: github.event_name == 'pull_request'
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          echo "Validating branch name: ${HEAD_REF}"
+          if [[ "${HEAD_REF}" =~ ^(ai|codex)/ ]]; then
+            echo "::error::Branch prefix 'ai/' or 'codex/' is strictly forbidden by enterprise policy."
+            exit 1
+          fi
+          if [[ ! "${HEAD_REF}" =~ ^(feat|fix|build|ci|docs|test|refactor|perf|security|chore)/[a-z0-9-]+$ ]]; then
+            echo "::error::Branch '${HEAD_REF}' must follow '<type>/<kebab-case-slug>' convention."
+            exit 1
+          fi
+
+      - name: Provision Java 21 LTS (Eclipse Temurin) & Gradle Cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: "gradle"
+
+      - name: Execute Spotless, Static Analysis, ArchUnit & JaCoCo >=85% Gates
+        run: |
+          chmod +x ./gradlew
+          ./gradlew spotlessCheck check --no-daemon --stacktrace
+
+      - name: Execute Deterministic Headless Bootstrap Verification
+        run: |
+          if [ -f "bootstrap/src/main/java/io/chronos/engine/bootstrap/Main.java" ]; then
+            ./gradlew :bootstrap:run --no-daemon --stacktrace
+          else
+            echo "Bootstrap entrypoint not yet present on this branch; skipping runtime smoke tick."
+          fi
+
+      - name: Upload Quality & Coverage Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-and-coverage-reports
+          path: |
+            **/build/reports/tests/test/**
+            **/build/reports/jacoco/test/**
+            **/build/reports/spotbugs/**
+            **/build/reports/checkstyle/**
+            **/build/reports/pmd/**
+          retention-days: 14
