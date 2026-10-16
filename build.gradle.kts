@@ -111,6 +111,7 @@ subprojects {
     }
 
     extensions.configure<SpotlessExtension> {
+        lineEndings = com.diffplug.spotless.LineEnding.UNIX
         java {
             googleJavaFormat("1.24.0")
             removeUnusedImports()
