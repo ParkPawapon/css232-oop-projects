@@ -1,0 +1,49 @@
+[versions]
+jdk = "21"
+spotless = "6.25.0"
+spotbugsPlugin = "6.0.26"
+spotbugsEngine = "4.8.6"
+checkstyleTool = "10.20.1"
+pmdTool = "7.7.0"
+jacocoTool = "0.8.12"
+slf4jVer = "2.0.16"
+logbackVer = "1.5.12"
+micrometerVer = "1.14.1"
+jacksonVer = "2.18.1"
+kryoVer = "5.6.2"
+nettyVer = "4.1.115.Final"
+junitVer = "5.11.3"
+assertjVer = "3.26.3"
+mockitoVer = "5.14.2"
+archunitVer = "1.3.0"
+testcontainersVer = "1.20.3"
+
+[libraries]
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jVer" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackVer" }
+micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometerVer" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonVer" }
+kryo-core = { module = "com.esotericsoftware:kryo", version.ref = "kryoVer" }
+netty-transport = { module = "io.netty:netty-transport", version.ref = "nettyVer" }
+
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVer" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjVer" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoVer" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockitoVer" }
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunitVer" }
+testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainersVer" }
+
+[bundles]
+testing-suite = [
+    "junit-jupiter",
+    "assertj-core",
+    "mockito-core",
+    "mockito-junit",
+    "archunit-junit5"
+]
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugsPlugin" }
