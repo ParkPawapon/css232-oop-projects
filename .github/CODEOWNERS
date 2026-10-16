@@ -1,0 +1,12 @@
+# Enterprise Code Ownership Rules
+# All architectural, build, CI/CD, and source changes require review from @ParkPawapon
+*                       @ParkPawapon
+/.github/               @ParkPawapon
+/config/                @ParkPawapon
+/gradle/                @ParkPawapon
+/core-domain/           @ParkPawapon
+/core-application/      @ParkPawapon
+/adapter-persistence/   @ParkPawapon
+/adapter-network/       @ParkPawapon
+/adapter-presentation/  @ParkPawapon
+/bootstrap/             @ParkPawapon
