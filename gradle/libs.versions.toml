@@ -1,6 +1,6 @@
 [versions]
 jdk = "21"
-spotless = "6.25.0"
+spotless = "8.10.4"
 spotbugsPlugin = "6.0.26"
 spotbugsEngine = "4.8.6"
 checkstyleTool = "10.20.1"
