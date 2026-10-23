@@ -15,7 +15,7 @@ nettyVer = "4.1.115.Final"
 junitVer = "5.11.3"
 assertjVer = "3.27.7"
 mockitoVer = "5.14.2"
-archunitVer = "1.3.0"
+archunitVer = "1.5.1"
 testcontainersVer = "1.20.3"
 
 [libraries]
